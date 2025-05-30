@@ -40,7 +40,7 @@ int main() {
     };
 
     // 서비스 인증키
-    std::string serviceKey = "llxfA5SLZBoHNW0/KQgGMlGyiRzTQ0LR2dugUCEPHnGHylTnyL2DmCj3ooUsqcWx5/UMuCWYbsiH03VHrd0PQQ==";  // ← URL 인코딩된 인증키
+    std::string serviceKey = "Your API Key";  // ← URL 인코딩된 인증키
 
     // 날씨 데이터 API 요청 URL 생성
     std::ostringstream oss;
