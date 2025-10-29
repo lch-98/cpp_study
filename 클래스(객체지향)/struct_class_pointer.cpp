@@ -1,4 +1,4 @@
-// -> 연산자란
+// 구조체는 기본 접근이 public 클래스는 기본 접근이 private
 #include <iostream>
 #include <string>
 using namespace std;
