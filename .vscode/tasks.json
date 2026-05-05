@@ -1,136 +1,87 @@
 {
     "version": "2.0.0",
-    "runner": "terminal",
-    "type": "shell",
-    "echoCommand": true,
-    "presentation": {
-        "reveal": "always"
-    },
     "tasks": [
         {
-            "label": "save and compile for C++",
-            "command": "g++",
-            "args": [
-                "${file}",
-                "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
-            ],
-            "group": "build",
-            "problemMatcher": {
-                "fileLocation": [
-                    "relative",
-                    "${workspaceRoot}"
-                ],
-                "pattern": {
-                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning error):\\s+(.*)$",
-                    "file": 1,
-                    "line": 2,
-                    "column": 3,
-                    "severity": 4,
-                    "message": 5
-                }
-            }
-        },
-        {
-            "label": "save and compile for C",
-            "command": "gcc",
-            "args": [
-                "${file}",
-                "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
-            ],
-            "group": "build",
-            "problemMatcher": {
-                "fileLocation": [
-                    "relative",
-                    "${workspaceRoot}"
-                ],
-                "pattern": {
-                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning error):\\s+(.*)$",
-                    "file": 1,
-                    "line": 2,
-                    "column": 3,
-                    "severity": 4,
-                    "message": 5
-                }
-            }
-        },
-        {
-            "label": "execute",
+            "label": "MSVC: Build Current File (Ctrl+Shift+B)",
+            "type": "shell",
             "command": "cmd",
+            "args": [
+                "/d", "/c",
+                "call \"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat\" > nul && cl /std:c++17 /EHsc /W3 /nologo \"${file}\" /Fe\"${fileDirname}\\${fileBasenameNoExtension}.exe\""
+            ],
+            "options": {
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/d", "/c"]
+                }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": "$msCompile",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "MSVC: Build & Run",
+            "type": "shell",
+            "command": "cmd",
+            "args": [
+                "/d", "/c",
+                "call \"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat\" > nul && cl /std:c++17 /EHsc /W3 /nologo \"${file}\" /Fe\"${fileDirname}\\${fileBasenameNoExtension}.exe\" && \"${fileDirname}\\${fileBasenameNoExtension}.exe\""
+            ],
+            "options": {
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/d", "/c"]
+                }
+            },
             "group": "test",
-            "args": [
-                "/C",
-                "${fileDirname}\\${fileBasenameNoExtension}"
-            ]
+            "problemMatcher": "$msCompile",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
         },
         {
-            "type": "cppbuild",
-            "label": "C/C++: gcc.exe 활성 파일 빌드",
-            "command": "C:\\MinGW\\bin\\gcc.exe",
+            "label": "MSVC: Build Winsock (TCP Socket)",
+            "type": "shell",
+            "command": "cmd",
             "args": [
-                "-g",
-                "${file}",
-                "-o",
-                "${fileDirname}\\${fileBasenameNoExtension}.exe"
+                "/d", "/c",
+                "call \"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat\" > nul && cl /std:c++17 /EHsc /W3 /nologo \"${file}\" /Fe\"${fileDirname}\\${fileBasenameNoExtension}.exe\" /link ws2_32.lib"
             ],
             "options": {
-                "cwd": "${fileDirname}"
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/d", "/c"]
+                }
             },
-            "problemMatcher": [
-                "$gcc"
-            ],
             "group": "build",
-            "detail": "디버거에서 생성된 작업입니다."
+            "problemMatcher": "$msCompile",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
         },
         {
-            "type": "cppbuild",
-            "label": "C/C++: g++.exe 활성 파일 빌드",
-            "command": "C:\\MinGW\\bin\\g++.exe",
-            "args": [
-                "-g",
-                "${file}",
-                "-o",
-                "${fileDirname}\\${fileBasenameNoExtension}.exe"
-            ],
+            "label": "Run Executable",
+            "type": "shell",
+            "command": "\"${fileDirname}\\${fileBasenameNoExtension}.exe\"",
             "options": {
-                "cwd": "${fileDirname}"
+                "shell": {
+                    "executable": "cmd.exe",
+                    "args": ["/d", "/c"]
+                }
             },
-            "problemMatcher": [
-                "$gcc"
-            ],
-            "group": "build",
-//            "group": {
-//               "kind": "build",
-//                "isDefault": true
-//            },
-            
-            "detail": "디버거에서 생성된 작업입니다."
-        },
-        {
-            "type": "cppbuild",
-            "label": "C/C++: gcc.exe 활성 파일 빌드",
-            "command": "C:\\MinGW\\bin\\gcc.exe",
-            "args": [
-                "-g",
-                "${file}",
-                "-o",
-                "${fileDirname}\\${fileBasenameNoExtension}.exe"
-            ],
-            "options": {
-                "cwd": "${fileDirname}"
-            },
-            "problemMatcher": [
-                "$gcc"
-            ],
-            "group": "build",
-              
-            // "group": {
-            //     "kind": "build",
-            //     "isDefault": true
-            // },
-
-            "detail": "컴파일러: C:\\MinGW\\bin\\gcc.exe"
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
         }
     ]
 }

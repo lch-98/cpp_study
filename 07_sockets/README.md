@@ -1,54 +1,75 @@
-# 07. Sockets & HTTP (소켓 통신)
+# 07. Sockets (소켓 통신)
 
-TCP 소켓으로 로컬 서버-클라이언트 통신을 구현하고,
-HTTP 라이브러리(libcurl)로 외부 API를 호출합니다.
+Winsock2로 TCP/UDP 소켓 통신을 구현한다. 외부 라이브러리 없이 Windows SDK만으로 빌드 가능.
 
 ---
 
 ## 학습 순서
 
-### [01_local_tcp](01_local_tcp/) — 로컬 TCP 통신
-| 파일 | 설명 |
-|------|------|
-| [server/main.cpp](01_local_tcp/server/main.cpp) | Winsock TCP 서버: bind → listen → accept → recv/send |
-| [client/main.cpp](01_local_tcp/client/main.cpp) | Winsock TCP 클라이언트: connect → send → recv |
-
-**실행 방법:**
-```
-1. server/main.cpp 빌드 후 실행 (대기 상태)
-2. client/main.cpp 빌드 후 실행
-3. 서버 콘솔: "클라이언트 접속됨!" 출력
-4. 클라이언트 콘솔: "서버로부터 메시지: Hello from Server!" 출력
-```
-
-### [02_weather_api_http](02_weather_api_http/) — HTTP + JSON
-| 파일 | 설명 |
-|------|------|
-| [main.cpp](02_weather_api_http/main.cpp) | libcurl로 기상청 API 호출 → jsoncpp로 JSON 파싱 |
-
-**사용 전 필수 설정:**
-- [data.go.kr](https://www.data.go.kr)에서 기상청 API 인증키 발급
-- `main.cpp` 의 `serviceKey` 변수를 발급받은 키로 교체
-- CMakeLists.txt 에서 libcurl, jsoncpp 경로 설정
+| 파일 | 주제 | 핵심 개념 |
+|------|------|---------|
+| [01_local_tcp/](01_local_tcp/) | 기본 TCP 서버/클라이언트 | `socket`, `bind`, `listen`, `accept`, `connect` |
+| [02_http_raw.cpp](02_http_raw.cpp) | Raw HTTP GET 구현 | `getaddrinfo`, HTTP/1.1 요청 구조, 헤더/바디 파싱 |
+| [03_echo_server.cpp](03_echo_server.cpp) | Echo 서버 (반복 수신) | `SO_REUSEADDR`, recv 루프, 연결 종료 감지 |
+| [04_multi_client.cpp](04_multi_client.cpp) | select()로 다중 클라이언트 | `fd_set`, `FD_SET`, `select`, 브로드캐스트 |
+| [05_udp.cpp](05_udp.cpp) | UDP 핑퐁 통신 | `SOCK_DGRAM`, `sendto`, `recvfrom`, 비연결형 |
+| [06_threaded_server.cpp](06_threaded_server.cpp) | 스레드 기반 다중 클라이언트 | `thread::detach`, `mutex`, `atomic` |
 
 ---
 
-## TCP 서버-클라이언트 흐름
+## 빌드 (모든 파일에 ws2_32.lib 필요)
+
+```cmd
+cl /std:c++17 /EHsc 02_http_raw.cpp /link ws2_32.lib
+cl /std:c++17 /EHsc 03_echo_server.cpp /link ws2_32.lib
+cl /std:c++17 /EHsc 04_multi_client.cpp /link ws2_32.lib
+cl /std:c++17 /EHsc 05_udp.cpp /link ws2_32.lib
+cl /std:c++17 /EHsc 06_threaded_server.cpp /link ws2_32.lib
+```
+
+---
+
+## TCP 서버 흐름
 
 ```
-[Server]                         [Client]
-WSAStartup()                     WSAStartup()
-socket()                         socket()
+[Server]                    [Client]
+socket()                    socket()
 bind()
 listen()
-accept() ←─────── connect() ─── 
-recv()   ←─────── send()    ─── "Hello from Client!"
-send()   ──────── recv()    ──→ "Hello from Server!"
-closesocket()                    closesocket()
-WSACleanup()                     WSACleanup()
+accept() ←── connect() ────
+recv()   ←── send()    ────  데이터 전송
+send()   ───→ recv()         응답 수신
+closesocket()               closesocket()
 ```
 
----
+## select() vs thread 방식 비교
+
+| | select() | thread per client |
+|-|----------|-------------------|
+| 스레드 수 | 1개 | 클라이언트 수만큼 |
+| 구현 난이도 | 복잡 | 직관적 |
+| 클라이언트 수 제한 | FD_SETSIZE(64) | 메모리/OS 제한 |
+| 실무 발전형 | epoll(Linux) | thread pool |
+
+## 실행 순서
+
+**01_local_tcp:**
+```
+터미널 1: server.exe  (먼저 실행)
+터미널 2: client.exe  (나중 실행)
+```
+
+**03_echo_server + telnet:**
+```
+터미널 1: 03_echo_server.exe
+터미널 2: telnet 127.0.0.1 12345
+```
+
+**05_udp (두 터미널):**
+```
+터미널 1: 05_udp.exe → 내 포트: 9001, 상대: 9002
+터미널 2: 05_udp.exe → 내 포트: 9002, 상대: 9001
+```
 
 > **앞 단계:** [06_multithreading](../06_multithreading/)  
-> **다음 단계:** [08_gui_qt](../08_gui_qt/)
+> **다음 단계:** [08_console_ui](../08_console_ui/)

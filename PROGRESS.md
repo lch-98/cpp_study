@@ -14,9 +14,9 @@
 ### 01. Basics (기초 문법)
 **학습 목표:** 입출력, 변수, 타입, 포인터/참조, CMake 빌드 시스템
 
-- [ ] **01_io** — 입출력
-  - [ ] `output.cpp` — cout, endl
-  - [ ] `input.cpp` — cin, string, int 입력
+- [ x ] **01_io** — 입출력
+  - [ x ] `output.cpp` — cout, endl
+  - [ x ] `input.cpp` — cin, string, int 입력
 
 - [ ] **02_variables** — 변수와 메모리
   - [ ] `reference_pointer.cpp` — 참조자 vs 포인터 차이
@@ -99,24 +99,30 @@
 ---
 
 ### 07. Sockets (소켓 통신)
-**학습 목표:** TCP 소켓의 흐름을 이해하고, HTTP API를 호출한다.
+**학습 목표:** TCP/UDP 소켓의 흐름을 이해하고 다양한 서버 패턴을 구현한다.
 
-- [ ] `01_local_tcp/server/main.cpp` — Winsock TCP 서버
-- [ ] `01_local_tcp/client/main.cpp` — Winsock TCP 클라이언트
-- [ ] `02_weather_api_http/main.cpp` — libcurl HTTP GET + jsoncpp 파싱
+- [ ] `01_local_tcp/server/main.cpp` — Winsock TCP 서버 기초
+- [ ] `01_local_tcp/client/main.cpp` — Winsock TCP 클라이언트 기초
+- [ ] `02_http_raw.cpp` — raw socket으로 HTTP GET 직접 구현 (example.com)
+- [ ] `03_echo_server.cpp` — 반복 수신 Echo 서버, SO_REUSEADDR
+- [ ] `04_multi_client.cpp` — select()로 단일 스레드 다중 클라이언트 처리
+- [ ] `05_udp.cpp` — UDP 비연결형 핑퐁 통신 (두 터미널로 실행)
+- [ ] `06_threaded_server.cpp` — 스레드 기반 다중 클라이언트 서버
 - [ ] **직접 해보기**
-  - [ ] API 키 발급 후 실제 날씨 데이터 수신해보기
-  - [ ] 서버가 여러 메시지를 반복 수신하도록 개선해보기
+  - [ ] `04_multi_client.cpp`의 브로드캐스트를 채팅방으로 확장해보기
+  - [ ] `06_threaded_server.cpp`에 최대 접속자 수 제한 추가해보기
 
 ---
 
-### 08. GUI — Qt
-**학습 목표:** Qt 이벤트 루프와 기본 위젯을 이해한다.
+### 08. Console UI (콘솔 UI & 이벤트 루프)
+**학습 목표:** ANSI 코드로 색상/커서를 제어하고, GUI의 핵심 원리인 이벤트 루프를 직접 구현한다.
 
-- [ ] `main.cpp` — QApplication, QPushButton 기본
+- [ ] `01_ansi_colors.cpp` — ANSI 색상, 스타일, 진행률 바
+- [ ] `02_console_menu.cpp` — 방향키 인터랙티브 메뉴, 서브메뉴
+- [ ] `03_event_loop.cpp` — Poll → Dispatch → Render 이벤트 루프 (~60fps)
 - [ ] **직접 해보기**
-  - [ ] 버튼 클릭 시 텍스트 바뀌는 Signal/Slot 연결해보기
-  - [ ] QLineEdit, QLabel 추가해보기
+  - [ ] 진행률 바를 실제 작업(파일 읽기 등)에 붙여보기
+  - [ ] `03_event_loop.cpp`에 'a'/'d' 키로 움직이는 플레이어 추가해보기
 
 ---
 

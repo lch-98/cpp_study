@@ -13,7 +13,7 @@
  *   8. closesocket / WSACleanup : 정리
  *
  * 실행 방법: 서버를 먼저 실행한 후 client를 실행
- * 빌드: CMakeLists.txt 참고
+ * 빌드: cl /std:c++17 /EHsc main.cpp /link ws2_32.lib
  */
 #include <winsock2.h>
 #include <iostream>
